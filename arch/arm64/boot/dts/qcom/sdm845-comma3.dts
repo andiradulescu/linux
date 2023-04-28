@@ -344,6 +344,35 @@
 			   <GCC_LPASS_SWAY_CLK>;
 };
 
+&gpi_dma0 {
+	status = "okay";
+};
+
+/* IMU bus */
+/* &qupv3_se4_i2c in old comma_common.dtsi */
+&i2c4 {
+	status = "okay";
+	clock-frequency = <400000>;
+};
+
+/* light(RPR-0521RS) and touch panel I2C, /dev/i2c-2 */
+/* &qupv3_se5_i2c in old comma_tici.dts */
+&i2c5 {
+	status = "okay";
+	clock-frequency = <100000>;
+};
+
+/* audio and power monitor(ina230) I2C, /dev/i2c-0 */
+/* &qupv3_se10_i2c in old comma_common.dtsi */
+&i2c10 {
+	status = "okay";
+	clock-frequency = <100000>;
+};
+
+&qupv3_id_0 {
+	status = "okay";
+};
+
 &mss_pil {
 	status = "okay";
 	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
