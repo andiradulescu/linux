@@ -241,6 +241,14 @@
 #define RPMH_REGULATOR_LEVEL_SUPER_TURBO 	464
 #define RPMH_REGULATOR_LEVEL_SUPER_TURBO_NO_CPR	480
 
+/* This offset is needed as 0 is considered an invalid voltage. */
+#define RPMH_REGULATOR_LEVEL_OFFSET	1
+#define RPMH_REGULATOR_LEVEL_OFF	(0 + RPMH_REGULATOR_LEVEL_OFFSET)
+
+/* These levels may be used for RPMH ARC resource regulators */
+#define RPMH_REGULATOR_LEVEL_MIN	(0 + RPMH_REGULATOR_LEVEL_OFFSET)
+#define RPMH_REGULATOR_LEVEL_MAX	(65535 + RPMH_REGULATOR_LEVEL_OFFSET)
+
 /* MDM9607 Power Domains */
 #define MDM9607_VDDCX		0
 #define MDM9607_VDDCX_AO	1

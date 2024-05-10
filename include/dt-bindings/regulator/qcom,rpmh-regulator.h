@@ -5,6 +5,14 @@
 #define __QCOM_RPMH_REGULATOR_H
 
 /*
+ * These set constants may be used as the value for qcom,set of an RPMh
+ * resource device.
+ */
+#define RPMH_REGULATOR_SET_ACTIVE	1
+#define RPMH_REGULATOR_SET_SLEEP	2
+#define RPMH_REGULATOR_SET_ALL		3
+
+/*
  * These mode constants may be used to specify modes for various RPMh regulator
  * device tree properties (e.g. regulator-initial-mode).  Each type of regulator
  * supports a subset of the possible modes.

@@ -21,4 +21,9 @@
 #define GPU_CX_GDSC				0
 #define GPU_GX_GDSC				1
 
+/* GFX3D clock registers */
+#define GPU_CC_PLL0_OUT_EVEN					1
+#define GPU_CC_GX_GFX3D_CLK_SRC					2
+#define GPU_CC_GX_GFX3D_CLK					3
+
 #endif
