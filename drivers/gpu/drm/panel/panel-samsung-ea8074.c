@@ -351,7 +351,8 @@ static void samsung_ea8074_remove(struct mipi_dsi_device *dsi)
 }
 
 static const struct of_device_id samsung_ea8074_of_match[] = {
-	{ .compatible = "samsung,ea8074" }
+	{ .compatible = "samsung,ea8074" },
+	{},
 };
 MODULE_DEVICE_TABLE(of, samsung_ea8074_of_match);
 
