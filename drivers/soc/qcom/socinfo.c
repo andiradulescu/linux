@@ -16,7 +16,7 @@
 #include <linux/stringify.h>
 #include <linux/sys_soc.h>
 #include <linux/types.h>
-
+#include <soc/qcom/socinfo.h>
 #include <asm/unaligned.h>
 
 #include <dt-bindings/arm/qcom,ids.h>
@@ -134,6 +134,23 @@ static const char *const pmic_models[] = {
 	[73] = "PM8550",
 	[74] = "PMK8550",
 };
+
+static uint32_t socinfo_format;
+
+#define PART_NAME_MAX		32
+struct gpu_info {
+	__le32 gpu_chip_id;
+	__le32 vulkan_id;
+	char part_name[PART_NAME_MAX];
+};
+
+struct socinfo_partinfo {
+	__le32 part_type;
+	union {
+		struct gpu_info gpu_info;
+	};
+};
+struct socinfo_partinfo partinfo[SOCINFO_PART_MAX_PARTTYPE];
 
 struct socinfo_params {
 	u32 raw_device_family;
@@ -451,6 +468,73 @@ static const char *socinfo_machine(struct device *dev, unsigned int id)
 
 	return NULL;
 }
+
+int socinfo_get_feature_code(void)
+{
+	if (socinfo_format < SOCINFO_VERSION(0, 16)) {
+		pr_warn("socinfo: Feature code is not supported by bootloaders\n");
+		return -EINVAL;
+	}
+
+	return socinfo_get_feature_code_id();
+}
+EXPORT_SYMBOL(socinfo_get_feature_code);
+
+int socinfo_get_pcode(void)
+{
+	if (socinfo_format < SOCINFO_VERSION(0, 16)) {
+		pr_warn("socinfo: pcode is not supported by bootloaders\n");
+		return -EINVAL;
+	}
+
+	return socinfo_get_pcode_id();
+}
+EXPORT_SYMBOL(socinfo_get_pcode);
+
+char *socinfo_get_partinfo_part_name(unsigned int part_id)
+{
+	if (socinfo_format < SOCINFO_VERSION(0, 16) || part_id >= SOCINFO_PART_MAX_PARTTYPE)
+		return NULL;
+
+	switch (part_id) {
+	case SOCINFO_PART_GPU:
+		return partinfo[part_id].gpu_info.part_name;
+	default:
+		break;
+	}
+
+	return NULL;
+}
+EXPORT_SYMBOL(socinfo_get_partinfo_part_name);
+
+uint32_t socinfo_get_partinfo_chip_id(unsigned int part_id)
+{
+	uint32_t chip_id;
+
+	if (socinfo_format < SOCINFO_VERSION(0, 16) || part_id >= SOCINFO_PART_MAX_PARTTYPE)
+		return 0;
+
+	switch (part_id) {
+	case SOCINFO_PART_GPU:
+		chip_id = partinfo[part_id].gpu_info.gpu_chip_id;
+		break;
+	default:
+		chip_id = 0;
+		break;
+	}
+
+	return chip_id;
+}
+EXPORT_SYMBOL(socinfo_get_partinfo_chip_id);
+
+uint32_t socinfo_get_partinfo_vulkan_id(unsigned int part_id)
+{
+	if (socinfo_format < SOCINFO_VERSION(0, 16) || part_id != SOCINFO_PART_GPU)
+		return  0;
+
+	return partinfo[part_id].gpu_info.vulkan_id;
+}
+EXPORT_SYMBOL(socinfo_get_partinfo_vulkan_id);
 
 #ifdef CONFIG_DEBUG_FS
 

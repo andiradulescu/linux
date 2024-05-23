@@ -102,6 +102,7 @@ int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
 #define QCOM_SCM_SVC_IO			0x05
 #define QCOM_SCM_IO_READ		0x01
 #define QCOM_SCM_IO_WRITE		0x02
+#define QCOM_SCM_IO_RESET			0x03
 
 #define QCOM_SCM_SVC_INFO		0x06
 #define QCOM_SCM_INFO_IS_CALL_AVAIL	0x01
@@ -113,6 +114,21 @@ int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
 #define QCOM_SCM_MP_IOMMU_SET_CP_POOL_SIZE	0x05
 #define QCOM_SCM_MP_VIDEO_VAR			0x08
 #define QCOM_SCM_MP_ASSIGN			0x16
+#define QCOM_SCM_MP_CP_SMMU_APERTURE_ID			0x1b
+#define QCOM_SCM_MEMP_SHM_BRIDGE_ENABLE			0x1c
+#define QCOM_SCM_MEMP_SHM_BRIDGE_DELETE			0x1d
+#define QCOM_SCM_MEMP_SHM_BRDIGE_CREATE			0x1e
+#define QCOM_SCM_CP_APERTURE_REG	0x0
+#define QCOM_SCM_CP_LPAC_APERTURE_REG	0x1
+
+#define QCOM_SCM_SVC_DCVS			0x0D
+#define QCOM_SCM_DCVS_RESET			0x07
+#define QCOM_SCM_DCVS_UPDATE			0x08
+#define QCOM_SCM_DCVS_INIT			0x09
+#define QCOM_SCM_DCVS_UPDATE_V2			0x0a
+#define QCOM_SCM_DCVS_INIT_V2			0x0b
+#define QCOM_SCM_DCVS_INIT_CA_V2		0x0c
+#define QCOM_SCM_DCVS_UPDATE_CA_V2		0x0d
 
 #define QCOM_SCM_SVC_OCMEM		0x0f
 #define QCOM_SCM_OCMEM_LOCK_CMD		0x01
@@ -165,5 +181,15 @@ static inline int qcom_scm_remap_error(int err)
 	}
 	return -EINVAL;
 }
+
+extern bool qcom_scm_dcvs_core_available(void);
+extern bool qcom_scm_dcvs_ca_available(void);
+extern int qcom_scm_dcvs_reset(void);
+extern int qcom_scm_dcvs_init_v2(phys_addr_t addr, size_t size, int *version);
+extern int qcom_scm_dcvs_init_ca_v2(phys_addr_t addr, size_t size);
+extern int qcom_scm_dcvs_update(int level, s64 total_time, s64 busy_time);
+extern int qcom_scm_dcvs_update_v2(int level, s64 total_time, s64 busy_time);
+extern int qcom_scm_dcvs_update_ca_v2(int level, s64 total_time, s64 busy_time,
+				      int context_count);
 
 #endif

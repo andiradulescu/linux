@@ -337,4 +337,27 @@ int qcom_cc_probe_by_index(struct platform_device *pdev, int index,
 }
 EXPORT_SYMBOL_GPL(qcom_cc_probe_by_index);
 
+int qcom_clk_set_flags(struct clk *clk, unsigned long flags)
+{
+	struct clk_regmap *rclk;
+	struct clk_hw *hw;
+
+	if (IS_ERR_OR_NULL(clk))
+		return 0;
+
+	hw = __clk_get_hw(clk);
+	if (IS_ERR_OR_NULL(hw))
+		return -EINVAL;
+
+	if (!clk_is_regmap_clk(hw))
+		return -EINVAL;
+
+	rclk = to_clk_regmap(hw);
+	if (rclk->ops && rclk->ops->set_flags)
+		return rclk->ops->set_flags(hw, flags);
+
+	return 0;
+}
+EXPORT_SYMBOL(qcom_clk_set_flags);
+
 MODULE_LICENSE("GPL v2");

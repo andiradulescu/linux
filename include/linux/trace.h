@@ -61,6 +61,10 @@ void osnoise_trace_irq_entry(int id);
 void osnoise_trace_irq_exit(int id, const char *desc);
 
 #else /* CONFIG_TRACING */
+
+#include <linux/errno.h>
+#include <linux/stddef.h>
+
 static inline int register_ftrace_export(struct trace_export *export)
 {
 	return -EINVAL;

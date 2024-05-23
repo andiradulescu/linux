@@ -7,8 +7,12 @@
 #include <linux/clk-provider.h>
 #include <linux/regmap.h>
 #include <linux/export.h>
+#include <linux/pm_runtime.h>
 
 #include "clk-regmap.h"
+
+static LIST_HEAD(clk_regmap_list);
+static DEFINE_SPINLOCK(clk_regmap_lock);
 
 /**
  * clk_is_enabled_regmap - standard is_enabled() for regmap users
@@ -85,6 +89,36 @@ void clk_disable_regmap(struct clk_hw *hw)
 EXPORT_SYMBOL_GPL(clk_disable_regmap);
 
 /**
+ * clk_is_regmap_clk - Checks if clk is a regmap clk
+ *
+ * @hw: clk to check on
+ *
+ * Iterate over maintained clk regmap list to know
+ * if concern clk is regmap
+ *
+ * Returns true on success, false otherwise.
+ */
+bool clk_is_regmap_clk(struct clk_hw *hw)
+{
+	struct clk_regmap *rclk;
+	bool is_regmap_clk = false;
+
+	if (hw) {
+		spin_lock(&clk_regmap_lock);
+		list_for_each_entry(rclk, &clk_regmap_list, list_node) {
+			if (&rclk->hw == hw) {
+				is_regmap_clk = true;
+				break;
+			}
+		}
+		spin_unlock(&clk_regmap_lock);
+	}
+
+	return is_regmap_clk;
+}
+EXPORT_SYMBOL(clk_is_regmap_clk);
+
+/**
  * devm_clk_register_regmap - register a clk_regmap clock
  *
  * @dev: reference to the caller's device
@@ -104,3 +138,24 @@ int devm_clk_register_regmap(struct device *dev, struct clk_regmap *rclk)
 	return devm_clk_hw_register(dev, &rclk->hw);
 }
 EXPORT_SYMBOL_GPL(devm_clk_register_regmap);
+
+int clk_runtime_get_regmap(struct clk_regmap *rclk)
+{
+	int ret;
+
+	if (pm_runtime_enabled(rclk->dev)) {
+		ret = pm_runtime_get_sync(rclk->dev);
+		if (ret < 0)
+			return ret;
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL(clk_runtime_get_regmap);
+
+void clk_runtime_put_regmap(struct clk_regmap *rclk)
+{
+	if (pm_runtime_enabled(rclk->dev))
+		pm_runtime_put_sync(rclk->dev);
+}
+EXPORT_SYMBOL(clk_runtime_put_regmap);

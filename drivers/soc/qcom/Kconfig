@@ -268,4 +268,6 @@ config QCOM_INLINE_CRYPTO_ENGINE
 	tristate
 	select QCOM_SCM
 
+source "drivers/soc/qcom/mem_buf/Kconfig"
+
 endmenu

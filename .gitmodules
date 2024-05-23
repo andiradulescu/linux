@@ -1,0 +1,3 @@
+[submodule "drivers/gpu/msm"]
+	path = drivers/gpu/msm
+	url = https://github.com/andiradulescu/qcom-graphics-kernel.git

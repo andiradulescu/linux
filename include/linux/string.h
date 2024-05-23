@@ -66,6 +66,9 @@ extern char * strcpy(char *,const char *);
 #ifndef __HAVE_ARCH_STRNCPY
 extern char * strncpy(char *,const char *, __kernel_size_t);
 #endif
+#ifndef __HAVE_ARCH_STRLCPY
+size_t strlcpy(char *, const char *, size_t);
+#endif
 #ifndef __HAVE_ARCH_STRSCPY
 ssize_t strscpy(char *, const char *, size_t);
 #endif
@@ -399,6 +402,11 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
 {
 	size_t len = strlen(prefix);
 	return strncmp(str, prefix, len) == 0 ? len : 0;
+}
+
+static inline int strtobool(const char *s, bool *res)
+{
+	return kstrtobool(s, res);
 }
 
 #endif /* _LINUX_STRING_H_ */

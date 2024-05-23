@@ -29,6 +29,8 @@ struct qcom_cc_desc {
 	size_t num_gdscs;
 	struct clk_hw **clk_hws;
 	size_t num_clk_hws;
+	struct clk_vdd_class **clk_regulators;
+	size_t num_clk_regulators;
 };
 
 /**
@@ -65,5 +67,10 @@ extern int qcom_cc_probe(struct platform_device *pdev,
 			 const struct qcom_cc_desc *desc);
 extern int qcom_cc_probe_by_index(struct platform_device *pdev, int index,
 				  const struct qcom_cc_desc *desc);
+
+static inline const char *qcom_clk_hw_get_name(const struct clk_hw *hw)
+{
+	return hw->init ? hw->init->name : clk_hw_get_name(hw);
+}
 
 #endif

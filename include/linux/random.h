@@ -41,6 +41,10 @@ u8 get_random_u8(void);
 u16 get_random_u16(void);
 u32 get_random_u32(void);
 u64 get_random_u64(void);
+static inline unsigned int get_random_int(void)
+{
+	return get_random_u32();
+}
 static inline unsigned long get_random_long(void)
 {
 #if BITS_PER_LONG == 64

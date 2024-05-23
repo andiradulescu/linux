@@ -7,6 +7,7 @@
  */
 
 #include <linux/mod_devicetable.h>
+#include <linux/of_device.h>
 
 struct device;
 struct device_node;

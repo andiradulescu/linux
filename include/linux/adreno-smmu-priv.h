@@ -7,6 +7,7 @@
 #define __ADRENO_SMMU_PRIV_H
 
 #include <linux/io-pgtable.h>
+#include <linux/qcom-io-pgtable.h>
 
 /**
  * struct adreno_smmu_fault_info - container for key fault information
@@ -67,6 +68,7 @@ struct adreno_smmu_priv {
     void (*get_fault_info)(const void *cookie, struct adreno_smmu_fault_info *info);
     void (*set_stall)(const void *cookie, bool enabled);
     void (*resume_translation)(const void *cookie, bool terminate);
+		struct qcom_io_pgtable_info pgtbl_info; // added
 };
 
 #endif /* __ADRENO_SMMU_PRIV_H */
