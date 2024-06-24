@@ -5877,3 +5877,5 @@
 			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
 	};
 };
+
+#include "sdm845-gpu.dtsi"
