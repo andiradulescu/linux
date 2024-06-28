@@ -480,9 +480,12 @@
 &usb_2_hsphy {
 	status = "okay";
 
-	vdd-supply = <&vdd_qusb_hs0>;
+	vdd-supply = <&vdda_usb2_ss_core>;
 	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
 	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
+
+	qcom,imp-res-offset-value = <8>;
+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
 };
 
 &usb_2_qmpphy {
